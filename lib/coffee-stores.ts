@@ -25,10 +25,10 @@ export const fetchCoffeeStores = async () => {
   }
 };
 
-export const fetchCoffeeStore = async () => {
+export const fetchCoffeeStore = async(id: string) => {
     try {
     const response = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/poi.377957162414.json?proximity=ip&access_token=${process.env.MAPBOX_API}`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${id}.json?proximity=ip&access_token=${process.env.MAPBOX_API}`
     );
     const data = await response.json();
 

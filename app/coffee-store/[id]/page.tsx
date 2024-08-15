@@ -2,15 +2,15 @@ import React from 'react';
 import Link from 'next/link';
 import { fetchCoffeeStore } from '@/lib/coffee-stores';
 
-async function getData() {
+async function getData(id: string) {
   //mapbox api
-  return await fetchCoffeeStore();
+  return await fetchCoffeeStore(id);
 }
 
 export default async function Page(props: { params: { id: string }}) {
   const { params: { id } } = props;
   
-  const coffeeStore = await getData();
+  const coffeeStore = await getData(id);
 
   console.log({coffeeStore})
 
