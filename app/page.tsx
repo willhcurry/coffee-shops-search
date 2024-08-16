@@ -1,5 +1,6 @@
 import Banner from '@/components/banner.client';
 import Card from '@/components/card.server';
+import NearbyCoffeeStores from '@/components/nearby-coffee-stores.client';
 import { fetchCoffeeStores } from '@/lib/coffee-stores';
 import { CoffeeStoreType } from '@/types';
 
@@ -11,12 +12,14 @@ async function getData() {
 export default async function Home() {
   const coffeeStores = await getData();
 
+
+
   console.log('env', process.env.MAPBOX_API);
   return (
     <div className="mb-56">
       <main className="flex min-h-screen flex-col items-center justify-between p-14">
-        <Banner />
-
+        
+        <NearbyCoffeeStores />
         <div className="mt-20">
           <h2 className="mt-8 pb-8 text-4xl font-bold text-white">
             Utah Stores

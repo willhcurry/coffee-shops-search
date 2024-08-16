@@ -3,8 +3,11 @@
 import Image from 'next/image';
 import { MouseEventHandler } from 'react';
 
-const Banner = () => {
-  const handleOnClick = () => {};
+const Banner = ({
+  handleOnClick
+}: {
+  handleOnClick: MouseEventHandler<HTMLButtonElement> | undefined
+}) => {
   return (
     <div className="mb-12 grid lg:mb-24 lg:grid-cols-2">
       <div className="z-20 flex flex-col px-2 md:pt-12">
