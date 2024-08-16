@@ -9,12 +9,26 @@ const transformCoffeeData = (result: MapboxType) => {
   };
 };
 
-export const fetchCoffeeStores = async () => {
+const getListOfCoffeeStorePhotos = async () => {
   try {
     const response = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/coffee.json?proximity=-111.961904%2C40&access_token=${process.env.MAPBOX_API}`
+      `https:api.unsplash.com/search/photos/?client_id=${process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY}&query="coffee shop"&page=1&perPage=10`
+    );
+    const photos = await response.json();
+    const results = photos?.results || [];
+    return results?.map((result: { urls: any }) => result.urls['small']);
+  } catch (error) {
+    console.error('Error retrieving a photo', error);
+  }
+};
+
+export const fetchCoffeeStores = async (longLat: string, limit: number) => {
+  try {
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/coffee.json?limit=${limit}proximity=${longLat}&access_token=${process.env.NEXT_PUBLIC_MAPBOX_API}`
     );
     const data = await response.json();
+    const photos = await getListOfCoffeeStorePhotos();
 
     
     return data.features.map((result: MapboxType) =>
@@ -28,9 +42,10 @@ export const fetchCoffeeStores = async () => {
 export const fetchCoffeeStore = async(id: string) => {
     try {
     const response = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${id}.json?proximity=ip&access_token=${process.env.MAPBOX_API}`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${id}.json?proximity=ip&access_token=${process.env.NEXT_PUBLIC_MAPBOX_API}`
     );
-    const data = await response.json();
+      const data = await response.json();
+      const photos = await getListOfCoffeeStorePhotos();
 
         const coffeeStore = data.features.map((result: MapboxType) =>
             transformCoffeeData(result)
