@@ -18,7 +18,16 @@ export default function NearbyCoffeeStores() {
   
   useEffect(() => {
     async function coffeeStoresByLocation() {
-      
+      if (longLat) {
+        try {
+          const limit = 10;
+          const response = await fetch(`/api/getCoffeeStoresByLocation?longLat=${longLat}&limit=${limit}`);
+          const coffeeStores = await response.json();
+          setCoffeeStores(coffeeStores);
+        } catch(error) {
+          console.error(error);
+        }
+      }
     }
     coffeeStoresByLocation();
     
@@ -32,7 +41,7 @@ export default function NearbyCoffeeStores() {
         />
         {locationErrorMsg && <p>Error: {locationErrorMsg}</p>}
 
-        <div className="mt-20">
+        {coffeeStores.length > 0 && (<div className="mt-20">
           <h2 className="mt-8 pb-8 text-4xl font-bold text-white">
             Stores near me
           </h2>
@@ -47,6 +56,7 @@ export default function NearbyCoffeeStores() {
             ))}
           </div>
         </div>
+        )}
         </div>
     )
 }
