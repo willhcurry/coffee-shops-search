@@ -3,17 +3,22 @@ import Link from 'next/link';
 import { fetchCoffeeStore, fetchCoffeeStores } from '@/lib/coffee-stores';
 import Image from 'next/image';
 import { CoffeeStoreType } from '@/types';
+import { createCoffeeStore } from '@/lib/airtable';
 
-async function getData(id: string) {
-  //mapbox api
-  return await fetchCoffeeStore(id);
+async function getData(id: string, queryId: string) {
+  const coffeeStoreFromMapbox = await fetchCoffeeStore(id, queryId);
+
+  console.log({ id })
+  const _createCoffeeStore = createCoffeeStore(coffeeStoreFromMapbox, id);
+  return coffeeStoreFromMapbox;
 }
 
 export async function generateStaticParams() {
-  const coffeeStores = await fetchCoffeeStores();
+  const LAYTON_LONG_LAT = "-73.990593%2C40.740121";
+  const coffeeStores = await fetchCoffeeStores(LAYTON_LONG_LAT, 6);
 
   return coffeeStores.map((coffeeStore: CoffeeStoreType) => ({
-    id: coffeeStore.id,
+    id: coffeeStore.id.toString(),
   }))
 }
 
