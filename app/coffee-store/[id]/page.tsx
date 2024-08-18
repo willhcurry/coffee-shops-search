@@ -8,7 +8,6 @@ import { createCoffeeStore } from '@/lib/airtable';
 async function getData(id: string, queryId: string) {
   const coffeeStoreFromMapbox = await fetchCoffeeStore(id, queryId);
 
-  console.log({ id })
   const _createCoffeeStore = createCoffeeStore(coffeeStoreFromMapbox, id);
   return coffeeStoreFromMapbox;
 }

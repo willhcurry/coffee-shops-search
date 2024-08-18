@@ -7,7 +7,6 @@ var base = new Airtable({
 
 const table = base('coffee-stores');
 
-//find record
 const getMinifiedRecords = (records: AirtableRecordType[]) => {
     return records.map((record: AirtableRecordType) => {
         return {
@@ -36,28 +35,37 @@ const findRecordByFilter = async (id: string) => {
 
 export const createCoffeeStore = async (coffeeStore: CoffeeStoreType, id: string) => {
     const { name, address, voting = 0, imgUrl } = coffeeStore;
-    const records = await findRecordByFilter(id);
     
+    try {
+        if (id) {
+            const records = await findRecordByFilter(id);
+            if (records.length === 0) {
 
-    if (records.length === 0) {
-        //create
-
-        const createRecords = await table.create([{
-            fields: {
-                id,
-                name,
-                address,
-                voting,
-                imgUrl
-            }
-        }
-        ]);
-
-        console.log({ createRecords });
+                const createRecords = await table.create([{
+                    fields: {
+                        id,
+                        name,
+                        address,
+                        voting,
+                        imgUrl
+                    }
+                }
+                ]);
+                if (createRecords.length > 0) {
+                    console.log('Created a store with id', id);
+                    return getMinifiedRecords(createRecords);
+                }
         
-        return getMinifiedRecords(createRecords);
-    } else {
-        //return
-        console.log('coffee store exists')
+                
+            } else {
+                console.log('coffee store exists');
+                return records;
+            }
+        } else {
+            console.error('Store id is missing');
+        }
+
+    } catch(error) {
+        console.error('Error creating or finding store', error);
     }
 }
