@@ -4,17 +4,23 @@ import { fetchCoffeeStore, fetchCoffeeStores } from '@/lib/coffee-stores';
 import Image from 'next/image';
 import { CoffeeStoreType } from '@/types';
 import { createCoffeeStore } from '@/lib/airtable';
+import Upvote from '@/components/upvote.client';
 
 async function getData(id: string, queryId: string) {
   const coffeeStoreFromMapbox = await fetchCoffeeStore(id, queryId);
+  const _createCoffeeStore = await createCoffeeStore(coffeeStoreFromMapbox, id);
 
-  const _createCoffeeStore = createCoffeeStore(coffeeStoreFromMapbox, id);
-  return coffeeStoreFromMapbox;
+  const voting = _createCoffeeStore ? _createCoffeeStore[0].voting : 0;
+  return coffeeStoreFromMapbox ? {
+    ...coffeeStoreFromMapbox, voting
+  } : {};
 }
 
 export async function generateStaticParams() {
   const LAYTON_LONG_LAT = "-73.990593%2C40.740121";
   const coffeeStores = await fetchCoffeeStores(LAYTON_LONG_LAT, 6);
+
+  
 
   return coffeeStores.map((coffeeStore: CoffeeStoreType) => ({
     id: coffeeStore.id.toString(),
@@ -26,7 +32,7 @@ export default async function Page(props: { params: { id: string }}) {
   
   const coffeeStore = await getData(id);
 
-  const { name = '', address = '', imgUrl = '' } = coffeeStore;
+  const { name = '', address = '', imgUrl = '', voting} = coffeeStore;
 
   console.log({ coffeeStore });
 
@@ -64,6 +70,8 @@ export default async function Page(props: { params: { id: string }}) {
               <p className="pl-2">{address}</p>
             </div>
           )}
+
+          <Upvote voting={ voting } />
         </div>
       </div>
     </div>
