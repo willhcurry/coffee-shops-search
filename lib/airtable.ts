@@ -24,13 +24,6 @@ const findRecordByFilter = async (id: string) => {
         .firstPage();
     
     return getMinifiedRecords(findRecords);
-
-    const allRecords = findRecords.map((record: AirtableRecordType) => {
-        return {
-            recordId: record.id,
-            ...record.fields
-        };
-    });
 };
 
 export const createCoffeeStore = async (coffeeStore: CoffeeStoreType, id: string) => {
@@ -70,13 +63,14 @@ export const createCoffeeStore = async (coffeeStore: CoffeeStoreType, id: string
     }
 };
 
-export const updateCoffeeStore = async (coffeeStore: CoffeeStoreType, id: string) => {
+export const updateCoffeeStore = async (id: string) => {
     try {
         if (id) {
             const records = await findRecordByFilter(id);
             if (records.length !== 0) {
                 const record = records[0];
                 const updatedVoting = record.voting + 1;
+
                 const updateRecords = await table.update([{
                     id: record.recordId,
                     fields: {
