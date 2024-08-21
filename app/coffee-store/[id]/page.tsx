@@ -27,14 +27,18 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function Page(props: { params: { id: string }}) {
-  const { params: { id } } = props;
+export default async function Page(props: {
+  params: { id: string };
+  searchParams: { id: string };
+}) {
+  const {
+    params: { id },
+    searchParams: { id: queryId },
+  } = props;
   
-  const coffeeStore = await getData(id);
+  const coffeeStore = await getData(id, queryId);
 
   const { name = '', address = '', imgUrl = '', voting} = coffeeStore;
-
-  console.log({ coffeeStore });
 
   return (
     <div className="h-full pb-80">
@@ -71,7 +75,7 @@ export default async function Page(props: { params: { id: string }}) {
             </div>
           )}
 
-          <Upvote voting={ voting } />
+          <Upvote voting={voting} id={id} />
         </div>
       </div>
     </div>

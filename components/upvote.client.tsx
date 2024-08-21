@@ -1,15 +1,16 @@
 'use client';
 
+import { upvoteAction } from '@/action';
 import Image from 'next/image';
 import React from 'react'
 
-export default function Upvote({voting}: {voting:number}) {
+export default function Upvote({voting: id}: {voting:number, id: string}) {
     const handleOnClick = () => {
         console.log('clicked');
         
     };
     return (
-        <>
+        <form action={() => upvoteAction(id)}>
       <div className="mb-6 flex">
         <Image
           src="/static/icons/star.svg"
@@ -21,6 +22,6 @@ export default function Upvote({voting}: {voting:number}) {
       </div>
 
       <button onClick={handleOnClick}>Up vote!</button>
-      </>
+      </form>
   );
 }
